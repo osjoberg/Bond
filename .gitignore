@@ -6,3 +6,4 @@
 /.vs/Bond/v15/Server/sqlite3
 /Bond/obj
 /nuget
+*.suo
