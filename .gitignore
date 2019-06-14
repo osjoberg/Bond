@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Bond/bin
+/.vs/Bond/v15/Server/sqlite3
+/Bond/obj
+/nuget
