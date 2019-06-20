@@ -79,6 +79,11 @@ namespace Bond
                 var classPropertyName = NamingConvention.GetClassPropertyName(property);
                 var propertyTypeName = TypeResolver.GetTypeName(property.PropertyType);
 
+                if (propertyTypeName == null)
+                {
+                    throw BondException.ResolveException(property);
+                }
+
                 Formatter.WriteClassProperty(classPropertyName, propertyTypeName);
             }
 

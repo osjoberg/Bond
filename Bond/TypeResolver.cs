@@ -50,7 +50,13 @@ namespace Bond
             var genericEnumerableType = type.GetInterface("IEnumerable`1");
             if (genericEnumerableType != null)
             {
-                return WrapTypeName(GetTypeName(genericEnumerableType.GetGenericArguments()[0])) + "[]";
+                var typeName = GetTypeName(genericEnumerableType.GetGenericArguments()[0]);
+                if (typeName == null)
+                {
+                    return null;
+                }
+
+                return WrapTypeName(typeName) + "[]";
             }
 
             var isEnumerable = type.IsAssignableFrom(typeof(IEnumerable));
@@ -70,7 +76,18 @@ namespace Bond
         public virtual string GetNullableTypeName(Type type)
         {
             var nullableType = Nullable.GetUnderlyingType(type);
-            return nullableType != null ? GetTypeName(nullableType) + " | null" : null;
+            if (nullableType == null)
+            {
+                return null;
+            }
+
+            var typeName = GetTypeName(nullableType);
+            if (typeName == null)
+            {
+                return null;
+            }
+
+            return typeName + " | null";
         }
 
         public virtual string GetDictionaryTypeName(Type type)
@@ -79,8 +96,13 @@ namespace Bond
             if (genericDictionaryType != null)
             {
                 var genericArguments = genericDictionaryType.GetGenericArguments();
+                var typeName = GetTypeName(genericArguments[1]);
+                if (typeName == null)
+                {
+                    return null;
+                }
 
-                var valueTypeName = WrapTypeName(GetTypeName(genericArguments[1]));
+                var valueTypeName = WrapTypeName(typeName);
 
                 return "{[key: string]: " + valueTypeName + "}";
             }
@@ -96,14 +118,25 @@ namespace Bond
 
         public virtual string GetArrayTypeName(Type type)
         {
-            return type.IsArray ? WrapTypeName(GetTypeName(type.GetElementType())) + string.Concat(Enumerable.Repeat("[]", type.GetArrayRank())) : null;
+            if (type.IsArray == false)
+            {
+                return null;
+            }
+
+            var typeName = GetTypeName(type.GetElementType());
+            if (typeName == null)
+            {
+                return null;
+            }
+
+            return WrapTypeName(typeName) + string.Concat(Enumerable.Repeat("[]", type.GetArrayRank()));
         }
 
         public virtual string GetConvertedTypeName(Type type)
         {
             if (TypesToConvert.Contains(type) == false)
             {
-                throw new NotSupportedException(type.Name);
+                return null;
             }
 
             var namespaceName = NamingConvention.GetClassPropertyNamespaceName(CurrentNamespaceName, type);
