@@ -10,22 +10,38 @@ namespace Bond
     {
         internal readonly HashSet<Type> Types = new HashSet<Type>();
 
+        public void AddType<T>()
+        {
+            AddType(typeof(T));
+        }
+
         public void AddType(Type type)
         {
+            Argument.IsNotNull(type, nameof(type));
+
             if (Types.Contains(type))
             {
-                throw new ArgumentException("");
+                throw new ArgumentException($"Type {type} is already in the type collection.", nameof(type));
             }
 
             Types.Add(type);
         }
 
+        public void RemoveType<T>()
+        {
+            RemoveType(typeof(T));
+        }
+
         public void RemoveType(Type type)
         {
+            Argument.IsNotNull(type, nameof(type));
+
             if (Types.Contains(type) == false)
             {
-                throw new ArgumentException("");
+                throw new ArgumentException($"Type {type} is not in the type collection.", nameof(type));
             }
+
+            Types.Remove(type);
         }
 
         public void AddNamespace(string @namespace, bool recursive = true)
@@ -46,7 +62,7 @@ namespace Bond
             {
                 if (Types.Contains(result))
                 {
-                    throw new ArgumentException("", nameof(@namespace));
+                    throw new ArgumentException($"Type {result} is already in the type collection.", nameof(@namespace));
                 }
 
                 Types.Add(result);
