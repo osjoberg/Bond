@@ -11,7 +11,7 @@ namespace Bond
 
         internal static BondException ResolveException(PropertyInfo property)
         {
-            return new BondException($"Type {property.PropertyType}, defined in property {property.Name} on type {property.DeclaringType} can not be resolved. Check if the type is added to the type collection.");
+            return new BondException($"Property type \"{property.PropertyType}\", used on property named \"{property.Name}\" on type \"{property.DeclaringType}\" can not be resolved. Check if the type is added to the type collection.");
         }
     }
 }
